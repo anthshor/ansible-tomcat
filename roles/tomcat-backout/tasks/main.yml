@@ -1,0 +1,65 @@
+---
+# tasks file for tomcat-backout
+
+- name: Remove firewall rule for port 8080
+  firewalld:
+    port: 8080/tcp
+    permanent: true
+    state: disabled
+
+- name: Remove firewall rule http
+  firewalld:
+    service: http
+    permanent: true
+    state: disabled
+
+- name: Restart firewalld
+  service:
+    name: firewalld
+    state: restarted
+
+- name: Check if Service Exists
+  stat: path=/etc/systemd/system/tomcat.service
+  register: service_status
+
+- name: stop tomcat service
+  systemd:
+    name: tomcat
+    state: stopped
+  when: service_status.stat.exists
+
+- name: Remove tomcat.service 
+  file:
+    path: /etc/systemd/system/tomcat.service
+    state: absent
+
+- name: Remove the webapp user
+  user:
+    name: webapp
+    state: absent
+    remove: yes
+
+- name: Remove the webapp group
+  group:
+    name: webapp
+    state: absent
+
+- name: Remove java
+  yum:
+     name: java
+     state: absent
+
+- name: Remove unzip
+  yum:
+    name: unzip
+    state: absent
+
+- name: Remove software
+  file:
+    path: /tomcat/apache-tomcat-9.0.10.zip
+    state: absent
+
+- name: Remove binaries
+  file:
+    path: /tomcat
+    state: absent

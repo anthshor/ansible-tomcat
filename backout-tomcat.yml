@@ -1,0 +1,5 @@
+---
+- hosts: web
+  become: yes
+  roles:
+    - roles/tomcat-backout

@@ -1,0 +1,92 @@
+---
+# tasks file for tomcat
+- name: create software home
+  file: path=/tomcat state=directory
+
+#- name: Download tomcat
+#  get_url:
+#    url: "http://www-us.apache.org/dist/tomcat/tomcat-9/v9.0.10/bin/apache-tomcat-9.0.10.zip"
+#    dest: "/tomcat"
+
+- name: Copy tomcat zip file
+  copy: 
+    src: /vagrant/apache-tomcat-9.0.10.zip
+    dest: /tomcat
+    
+- name: Install unzip
+  yum:
+    name: unzip
+    state: latest
+
+- name: Unpack tomcat
+  unarchive:
+    src: /tomcat/apache-tomcat-9.0.10.zip
+    dest: /tomcat
+    remote_src: yes
+
+- name: Install java if it is not installed
+  yum:
+     name: java
+     state: present
+    
+- name: Create the webapp group
+  group:
+    name: webapp
+    state: present
+
+- name: Create the webapp user
+  user:
+    name: webapp
+    group: webapp
+    uid: "12022"
+
+- name: Create setenv.sh from template
+  template:
+    src: setenv.j2
+    dest: /tomcat/apache-tomcat-9.0.10
+
+- name: Create tomcat.service from template
+  template:
+    src: tomcat.service.j2
+    dest: /etc/systemd/system/tomcat.service
+
+- name: Modify ownership
+  file:
+    path: /tomcat/apache-tomcat-9.0.10
+    state: directory
+    owner: webapp
+    group: webapp 
+    recurse: yes
+  
+- name: Modify permissions
+  file: 
+    path: /tomcat/apache-tomcat-9.0.10/bin/{{ item }}
+    mode: 0750
+  with_items:
+    - startup.sh
+    - catalina.sh
+    - shutdown.sh
+
+- name: enable tomcat startup
+  systemd:
+    name: tomcat
+    enabled: True
+    daemon_reload: yes
+    state: restarted
+
+- name: Add firewall rule http
+  firewalld:
+    service: http
+    permanent: true
+    state: enabled
+
+- name: Add firewall rule for port 8080 
+  firewalld:
+    port: 8080/tcp
+    permanent: true
+    state: enabled
+
+- name: Restart firewalld
+  service:
+    name: firewalld
+    state: restarted
