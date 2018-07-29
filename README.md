@@ -23,7 +23,7 @@ The IP address are defined in /etc/hosts
 ```
 
 
-Runing the playbook
+Running the playbook
 
 ```
 [ansible@ansible-vm tomcat]$ ansible-playbook tomcat-play.yml
