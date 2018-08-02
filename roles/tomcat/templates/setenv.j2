@@ -3,5 +3,10 @@ export JRE_HOME=/usr/java/jdk1.8.0_181-amd64
 export CATALINA_PID="$CATALINA_BASE/tomcat.pid"
 export PATH=$PATH:$CATALINA_HOME/bin
 export JAVA_HOME="/usr/java/jdk1.8.0_181-amd64"
+export LOGS_DIR="/tomcat/apache-tomcat-9.0.10/logs"
 export JAVA_OPTS="$JAVA_OPTS -Xms1256m -Xmx1256m -XX:NewSize=256m -XX:MaxNewSize=512m -XX:SurvivorRatio=8 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=15 -XX:+UseBiasedLocking  -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=400m"
 
+SUN_LOGGING_OPTIONS="-XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -Xloggc:${LOGS_DIR}/tomcat_gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=64m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${LOGS_DIR}"
+
+JAVA_OPTS="$JAVA_OPTS $SUN_LOGGING_OPTIONS"
+export JAVA_OPTS
