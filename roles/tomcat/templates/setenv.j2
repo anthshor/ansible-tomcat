@@ -1,4 +1,7 @@
 export CATALINA_HOME=/tomcat/apache-tomcat-9.0.10
-export JRE_HOME=/bin/java
+export JRE_HOME=/usr/java/jdk1.8.0_181-amd64
 export CATALINA_PID="$CATALINA_BASE/tomcat.pid"
 export PATH=$PATH:$CATALINA_HOME/bin
+export JAVA_HOME="/usr/java/jdk1.8.0_181-amd64"
+export JAVA_OPTS="$JAVA_OPTS -Xms1256m -Xmx1256m -XX:NewSize=256m -XX:MaxNewSize=512m -XX:SurvivorRatio=8 -XX:TargetSurvivorRatio=90 -XX:MaxTenuringThreshold=15 -XX:+UseBiasedLocking  -XX:MetaspaceSize=256m -XX:MaxMetaspaceSize=400m"
+

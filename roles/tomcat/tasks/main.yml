@@ -24,11 +24,22 @@
     dest: /tomcat
     remote_src: yes
 
-- name: Install java if it is not installed
-  yum:
-     name: java
-     state: present
-    
+- name: Copy Java software
+  copy: 
+    src: /vagrant/software/p28279050_180181_Linux-x86-64.zip
+    dest: /tmp
+
+- name: Unpack Java software
+  unarchive:
+    src: /tmp/p28279050_180181_Linux-x86-64.zip
+    dest: /tmp
+    remote_src: yes
+
+- name: Install Java rpm
+  yum: 
+    name: /tmp/jdk-8u181-linux-x64.rpm
+    state: present
+     
 - name: Create the webapp group
   group:
     name: webapp
@@ -43,7 +54,7 @@
 - name: Create setenv.sh from template
   template:
     src: setenv.j2
-    dest: /tomcat/apache-tomcat-9.0.10
+    dest: /tomcat/apache-tomcat-9.0.10/bin/setenv.sh
 
 - name: Create tomcat.service from template
   template:
