@@ -10,7 +10,7 @@
 
 - name: Copy tomcat zip file
   copy: 
-    src: /vagrant/apache-tomcat-9.0.10.zip
+    src: /vagrant/software/apache-tomcat-9.0.10.zip
     dest: /tomcat
     
 - name: Install unzip

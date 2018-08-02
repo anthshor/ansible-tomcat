@@ -1,0 +1,8 @@
+---
+# tasks file for tomcat-deploy
+- name: Copy war file from software inventory to webapps
+  copy: 
+    src: /vagrant/deployments/{{ item }}
+    dest: /tomcat/apache-tomcat-9.0.10/webapps
+  with_items: 
+    - "sample.war"
